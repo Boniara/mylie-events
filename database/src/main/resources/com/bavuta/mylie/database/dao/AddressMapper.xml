@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bavuta.mylie.database.dao.AddressMapper">
+
+    <insert id="createAddress" keyProperty="id" keyColumn="ID" useGeneratedKeys="true">
+        INSERT INTO mylie.ADDRESSES (COUNTRY_ID, COUNTRY_CODE, CITY_ID, STREET, HOUSE_NUMBER) VALUES (
+          #{country.id},
+          #{country.code},
+          #{city.id},
+          #{street},
+          #{houseNumber}
+        )
+    </insert>
+
+    <sql id="getAll">
+        <![CDATA[
+          SELECT
+          A.ID AS ADDRESS_ID,
+          C.ID AS COUNTRY_ID,
+          C.CODE AS COUNTRY_CODE,
+          C.NAME AS COUNTRY_NAME,
+          CT.ID AS CITY_ID,
+          CT.NAME AS CITY_NAME,
+          CT.DISTRICT AS CITY_DISTRICT,
+          CT.POPULATION AS CITY_POPULATION,
+          A.STREET AS ADDRESS_STREET,
+          A.HOUSE_NUMBER AS ADDRESS_HOUSE_NUMBER,
+          A.CREATED_AT AS ADDRESS_CREATED_AT
+          FROM
+          mylie.ADDRESSES A
+          LEFT JOIN
+          mylie.COUNTRIES C
+          ON
+          A.COUNTRY_ID = C.ID
+          LEFT JOIN
+          mylie.CITIES CT
+          ON
+          A.CITY_ID = CT.ID
+        ]]>
+    </sql>
+
+    <select id="getAllAddresses" resultMap="AddressResultMap">
+      <include refid="getAll"/>
+    </select>
+
+    <select id="getAddressById" resultMap="AddressResultMap">
+        <include refid="getAll"/>
+        <![CDATA[
+        WHERE
+        A.ID = #{id}
+      ]]>
+    </select>
+
+    <update id="updateAddress">
+        <![CDATA[
+          UPDATE
+          mylie.ADDRESSES
+          SET
+          COUNTRY_ID = #{country.id},
+          COUNTRY_CODE = #{country.code},
+          CITY_ID = #{city.id},
+          STREET = #{street},
+          HOUSE_NUMBER = #{houseNumber}
+          WHERE
+          ID = #{id}
+        ]]>
+    </update>
+
+    <delete id="deleteAddressById">
+        <![CDATA[
+          DELETE
+          FROM mylie.ADDRESSES
+          WHERE
+          ID = #{id}
+        ]]>
+    </delete>
+
+    <resultMap id="AddressResultMap" type="com.bavuta.mylie.database.models.Address" autoMapping="false">
+        <id property="id" column="ADDRESS_ID"/>
+        <result property="street" column="ADDRESS_STREET"/>
+        <result property="houseNumber" column="ADDRESS_HOUSE_NUMBER"/>
+        <result property="createdAt" column="ADDRESS_CREATED_AT"/>
+        <association property="country" javaType="com.bavuta.mylie.database.models.Country" resultMap="com.bavuta.mylie.database.dao.CountryMapper.CountryResultMap"/>
+        <association property="city" javaType="com.bavuta.mylie.database.models.City" resultMap="com.bavuta.mylie.database.dao.CityMapper.CityResultMap"/>
+    </resultMap>
+
+</mapper>

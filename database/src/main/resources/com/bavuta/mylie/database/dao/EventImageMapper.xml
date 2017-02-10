@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bavuta.mylie.database.dao.EventImageMapper">
+
+    <insert id="createImage"  keyProperty="image.id" keyColumn="ID" useGeneratedKeys="true">
+        <![CDATA[
+          INSERT INTO mylie.EVENT_IMAGES(IMAGE, EVENT_ID) VALUES (
+            #{image.image},
+            #{eventId}
+          )
+        ]]>
+    </insert>
+
+    <sql id="getAll">
+        <![CDATA[
+          SELECT
+          EI.ID AS EVENT_IMAGE_ID,
+          EI.IMAGE AS EVENT_IMAGE_IMAGE
+          FROM
+          EVENT_IMAGES EI
+        ]]>
+    </sql>
+    
+    <select id="getAllImages" resultMap="EventImageResultMap">
+        <include refid="getAll"/>
+    </select>
+
+    <select id="getImageById" resultMap="EventImageResultMap">
+        <include refid="getAll"/>
+        <![CDATA[
+          WHERE
+          EI.ID = #{id}
+        ]]>
+    </select>
+
+    <select id="getAllImagesByEventId" resultMap="EventImageResultMap">
+        <include refid="getAll"/>
+        <![CDATA[
+          WHERE
+          EI.EVENT_ID = #{id}
+        ]]>
+    </select>
+    
+    <resultMap id="EventImageResultMap" type="com.bavuta.mylie.database.models.Image" autoMapping="false">
+        <id property="id" column="EVENT_IMAGE_ID"/>
+        <result property="image" column="EVENT_IMAGE_IMAGE"/>
+    </resultMap>
+
+</mapper>

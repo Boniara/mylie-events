@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bavuta.mylie.database.dao.EventMapper">
+
+    <insert id="createEvent" keyColumn="ID" keyProperty="id" useGeneratedKeys="true">
+        <![CDATA[
+          INSERT INTO mylie.EVENTS (USER_ID, ADDRESS_ID, DATE, DESCRIPTION, LIKES, PRIORITY) VALUES (
+            #{eventOwner.id},
+            #{address.id},
+            #{date},
+            #{description},
+            #{likes},
+            #{priority}
+          )
+        ]]>
+    </insert>
+
+    <sql id="getAll">
+        <![CDATA[
+          SELECT
+          E.ID AS EVENT_ID,
+          E.USER_ID AS USER_ID,
+          U.NAME AS USER_NAME,
+          U.DATE_OF_BIRTH AS USER_DATE_OF_BIRTH,
+          U.GENDER AS USER_GENDER,
+          U.CREATED_AT AS USER_CREATED_AT,
+          E.DATE AS EVENT_DATE,
+          A.ID AS ADDRESS_ID,
+          A.STREET AS ADDRESS_STREET,
+          A.HOUSE_NUMBER AS ADDRESS_HOUSE_NUMBER,
+          C.ID AS COUNTRY_ID,
+          C.CODE AS COUNTRY_CODE,
+          C.NAME AS COUNTRY_NAME,
+          CT.ID AS CITY_ID,
+          CT.NAME AS CITY_NAME,
+          CT.DISTRICT AS CITY_DISTRICT,
+          CT.POPULATION AS CITY_POPULATION,
+          E.DESCRIPTION AS EVENT_DESCRIPTION,
+          E.LIKES AS EVENT_LIKES,
+          E.PRIORITY AS EVENT_PRIORITY,
+          E.CREATED_AT AS EVENT_CREATED_AT
+          FROM
+          mylie.EVENTS E
+          LEFT JOIN
+          mylie.USERS U
+          ON
+          E.USER_ID = U.ID
+          LEFT JOIN
+          mylie.ADDRESSES A
+          ON
+          A.ID = E.ADDRESS_ID
+          LEFT JOIN
+          mylie.COUNTRIES C
+          ON
+          A.COUNTRY_ID = C.ID
+          LEFT JOIN
+          mylie.CITIES CT
+          ON
+          A.CITY_ID = CT.ID
+        ]]>
+    </sql>
+
+    <select id="getAllEvents" resultMap="EventResultMap">
+        <include refid="getAll"/>
+    </select>
+
+    <select id="getEventById" resultMap="EventResultMap">
+        <include refid="getAll"/>
+        <![CDATA[
+          WHERE
+          E.ID = #{id}
+        ]]>
+    </select>
+
+    <update id="updateEvent">
+        <![CDATA[
+          UPDATE
+          mylie.EVENTS
+          SET
+          USER_ID = #{eventOwner.id},
+          ADDRESS_ID = #{address.id},
+          DATE = #{date},
+          DESCRIPTION = #{description},
+          LIKES = #{likes},
+          PRIORITY = #{priority}
+          WHERE
+          ID = #{id}
+        ]]>
+    </update>
+
+    <delete id="deleteEventById">
+        <![CDATA[
+          DELETE
+          FROM mylie.EVENTS
+          WHERE
+          ID = #{id}
+        ]]>
+    </delete>
+
+    <resultMap id="EventResultMap" type="com.bavuta.mylie.database.models.Event" autoMapping="false">
+        <id property="id" column="EVENT_ID"/>
+        <result property="date" column="EVENT_DATE"/>
+        <result property="description" column="EVENT_DESCRIPTION"/>
+        <result property="likes" column="EVENT_LIKES"/>
+        <result property="priority" column="EVENT_PRIORITY"/>
+        <result property="createdAt" column="EVENT_CREATED_AT"/>
+        <association property="eventOwner" javaType="com.bavuta.mylie.database.models.User" resultMap="com.bavuta.mylie.database.dao.UserMapper.UserResultMap"/>
+        <association property="address" javaType="com.bavuta.mylie.database.models.Address" resultMap="com.bavuta.mylie.database.dao.AddressMapper.AddressResultMap"/>
+    </resultMap>
+</mapper>

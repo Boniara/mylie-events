@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.bavuta.mylie.database.dao.CityMapper">
+
+    <sql id="getAll">
+        <![CDATA[
+          SELECT
+          C.ID AS CITY_ID,
+          C.NAME AS CITY_NAME,
+          C.DISTRICT AS CITY_DISTRICT,
+          C.POPULATION AS CITY_POPULATION,
+          C.CREATED_AT AS CITY_CREATED_AT
+          FROM
+          mylie.CITIES C
+        ]]>
+    </sql>
+
+    <select id="getAllCities" resultMap="CityResultMap">
+        <include refid="getAll"/>
+    </select>
+
+    <select id="getCityById" resultMap="CityResultMap">
+        <include refid="getAll"/>
+        <![CDATA[
+          WHERE
+          C.ID = #{id}
+        ]]>
+    </select>
+
+    <resultMap id="CityResultMap" type="com.bavuta.mylie.database.models.City" autoMapping="false">
+        <id property="id" column="CITY_ID"/>
+        <result property="name" column="CITY_NAME"/>
+        <result property="district" column="CITY_DISTRICT"/>
+        <result property="population" column="CITY_POPULATION"/>
+        <result property="createdAt" column="CITY_CREATED_AT"/>
+    </resultMap>
+</mapper>

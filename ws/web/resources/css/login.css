@@ -1,0 +1,57 @@
+.container {
+    padding: 16px;
+    width: 25%;
+    margin: auto;
+    height: 50%;
+}
+
+.container input[type="text"], input[type="password"] {
+    width: 100%;
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: hidden;
+    box-shadow: 0 0 4px black;
+    box-sizing: border-box;
+}
+
+.container input[type="text"]:hover, input[type="password"]:hover {
+    box-shadow: 0 0 8px blue;
+}
+
+.container input[type="button"]:not(#registration) {
+    width: 100%;
+    cursor: pointer;
+    padding: 12px 20px;
+    border-radius: 10px;
+}
+
+.container input#registration {
+
+}
+
+.container input[type="button"]:hover {
+    background: gray;
+}
+
+.login-form-div {
+    margin-top: 50%;
+}
+
+.login-form a {
+    font-family: Candara;
+}
+
+#footer-menu {
+    left: 0;
+    height: 40px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: aliceblue;
+}
+
+.login:invalid {
+    border-color: red;
+}

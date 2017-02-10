@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bavuta.mylie.database.dao.UserMapper">
+
+    <insert id="createUser" keyProperty="id" keyColumn="ID" useGeneratedKeys="true">
+        <![CDATA[
+          INSERT INTO mylie.USERS (NAME, EMAIL, PASSWORD, DATE_OF_BIRTH, GENDER, ABOUT, PRIORITY) VALUES (
+          #{name},
+          #{email},
+          #{password},
+          #{dateOfBirth},
+          #{gender},
+          #{about},
+          #{priority}
+          )
+        ]]>
+    </insert>
+
+    <sql id="getAll">
+        <![CDATA[
+          SELECT
+          U.ID AS USER_ID,
+          U.NAME AS USER_NAME,
+          U.EMAIL AS USER_EMAIL,
+          U.PASSWORD AS USER_PASSWORD,
+          U.DATE_OF_BIRTH AS USER_DATE_OF_BIRTH,
+          U.GENDER AS USER_GENDER,
+          U.ABOUT AS USER_ABOUT,
+          U.PRIORITY AS USER_PRIORITY,
+          U.CREATED_AT AS USER_CREATED_AT,
+          UR.ID AS USER_ROLE_ID,
+          UR.ROLE AS USER_ROLE_ROLE
+          FROM
+          mylie.USERS U
+          LEFT JOIN
+          mylie.USER_ROLES_USERS URU
+          ON
+          U.ID = URU.USER_ID
+          LEFT JOIN
+          mylie.USER_ROLES UR
+          ON
+          UR.ID = URU.USER_ROLE_ID
+        ]]>
+    </sql>
+    
+    <select id="getAllUsers" resultMap="UserResultMap">
+        <include refid="getAll"/>
+    </select>
+    
+    <select id="getUserById" resultMap="UserResultMap">
+        <include refid="getAll"/>
+        <![CDATA[
+        WHERE U.ID = #{id}
+        ]]>
+    </select>
+
+    <select id="getUserByEmail" resultMap="UserResultMap">
+        <include refid="getAll"/>
+        <![CDATA[
+          WHERE U.EMAIL = #{email}
+        ]]>
+    </select>
+
+    <update id="updateUser">
+        <![CDATA[
+          UPDATE mylie.users
+          SET
+          NAME = #{name},
+          EMAIL = #{email},
+          PASSWORD = #{password},
+          DATE_OF_BIRTH = #{dateOfBirth},
+          GENDER = #{gender},
+          ABOUT = #{about},
+          PRIORITY = #{priority}
+          WHERE
+          ID = #{id}
+        ]]>
+    </update>
+
+    <delete id="deleteUserById">
+        <![CDATA[
+          DELETE
+          FROM mylie.USERS
+          WHERE
+          ID = #{id}
+        ]]>
+    </delete>
+    
+    <resultMap id="UserResultMap" type="com.bavuta.mylie.database.models.User" autoMapping="false">
+        <id property="id" column="USER_ID"/>
+        <result property="name" column="USER_NAME"/>
+        <result property="email" column="USER_EMAIL"/>
+        <result property="password" column="USER_PASSWORD"/>
+        <result property="dateOfBirth" column="USER_DATE_OF_BIRTH"/>
+        <result property="gender" column="USER_GENDER"/>
+        <result property="about" column="USER_ABOUT"/>
+        <result property="priority" column="USER_PRIORITY"/>
+        <result property="createdAt" column="USER_CREATED_AT"/>
+        <collection property="userRoleList" ofType="com.bavuta.mylie.database.models.UserRole"
+                    resultMap="com.bavuta.mylie.database.dao.UserMapper.UserRoleResultMap"/>
+    </resultMap>
+
+    <resultMap id="UserRoleResultMap" type="com.bavuta.mylie.database.models.UserRole" autoMapping="false">
+        <id property="id" column="USER_ROLE_ID"/>
+        <result property="role" column="USER_ROLE_ROLE"/>
+    </resultMap>
+</mapper>

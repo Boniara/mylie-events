@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="AddressDaoTestSuite">
+    <test name="address-suite">
+        <classes>
+            <class name="com.bavuta.mylie.AddressTests">
+                <methods>
+                    <include name="createAddressTest"/>
+                    <include name="getAllAddressesTest"/>
+                    <include name="getAddressByIdTest"/>
+                    <include name="updateAddressTest"/>
+                    <include name="deleteAddressByIdTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.bavuta.mylie.database.dao.CountryMapper">
+
+    <sql id="getAll">
+        <![CDATA[
+          SELECT
+          C.ID AS COUNTRY_ID,
+          C.CODE AS COUNTRY_CODE,
+          C.NAME AS COUNTRY_NAME,
+          CT.ID AS CITY_ID,
+          CT.NAME AS CITY_NAME,
+          CT.DISTRICT AS CITY_DISTRICT,
+          CT.POPULATION AS CITY_POPULATION,
+          L.ID AS LANGUAGE_ID,
+          L.LANGUAGE AS LANGUAGE_NAME,
+          L.IS_OFFICIAL AS LANGUAGE_IS_OFFICIAL,
+          L.PERCENTAGE AS LANGUAGE_PERCENTAGE,
+          C.CREATED_AT AS COUNTRY_CREATED_AT
+          FROM
+          mylie.COUNTRIES C
+          LEFT JOIN
+          mylie.CITIES CT
+          ON
+          C.CODE = CT.COUNTRY_CODE
+          LEFT JOIN
+          mylie.COUNTRY_LANGUAGES L
+          ON
+          L.COUNTRY_CODE = C.CODE
+        ]]>
+    </sql>
+
+    <select id="getAllCountries" resultMap="CountryResultMap">
+        <include refid="getAll"/>
+    </select>
+
+    <select id="getCountryById" resultMap="CountryResultMap">
+        <include refid="getAll"/>
+        <![CDATA[
+          WHERE
+          C.ID = #{id}
+        ]]>
+    </select>
+
+    <resultMap id="CountryResultMap" type="com.bavuta.mylie.database.models.Country" autoMapping="false">
+        <id property="id" column="COUNTRY_ID"/>
+        <result property="code" column="COUNTRY_CODE"/>
+        <result property="name" column="COUNTRY_NAME"/>
+        <result property="createdAt" column="COUNRTY_CREATED_AT"/>
+        <collection property="cityList" ofType="com.bavuta.mylie.database.models.City"
+                    resultMap="com.bavuta.mylie.database.dao.CityMapper.CityResultMap"/>
+        <collection property="languageList" ofType="com.bavuta.mylie.database.models.Language"
+                    resultMap="com.bavuta.mylie.database.dao.LanguageMapper.LanguageResultMap"/>
+    </resultMap>
+</mapper>

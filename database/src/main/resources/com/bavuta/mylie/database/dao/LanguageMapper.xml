@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.bavuta.mylie.database.dao.LanguageMapper">
+
+    <sql id="getAll">
+        <![CDATA[
+          SELECT
+          L.ID AS LANGUAGE_ID,
+          L.LANGUAGE AS LANGUAGE_NAME,
+          L.IS_OFFICIAL AS LANGUAGE_IS_OFFICIAL,
+          L.PERCENTAGE AS LANGUAGE_PERCENTAGE,
+          L.CREATED_AT AS LANGUAGE_CREATED_AT
+          FROM
+          mylie.COUNTRY_LANGUAGES
+        ]]>
+    </sql>
+
+    <select id="getAllLanguages">
+        <include refid="getAll"/>
+    </select>
+
+    <select id="getLanguageById">
+        <include refid="getAll"/>
+        <![CDATA[
+          WHERE
+          L.ID = #{id}
+        ]]>
+    </select>
+
+    <resultMap id="LanguageResultMap" type="com.bavuta.mylie.database.models.Language" autoMapping="false">
+        <id property="id" column="LANGUAGE_ID"/>
+        <result property="language" column="LANGUAGE_NAME"/>
+        <result property="isOfficial" column="LANGUAGE_IS_OFFICIAL"/>
+        <result property="percentage" column="LANGUAGE_PERCENTAGE"/>
+        <result property="createdAt" column="LANGUAGE_CREATED_AT"/>
+    </resultMap>
+</mapper>

@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="EventDaoTestSuite">
+    <test name="event-suite">
+        <classes>
+            <class name="com.bavuta.mylie.EventTests">
+                <methods>
+                    <include name="createEventTest"/>
+                    <include name="getAllEventsTest"/>
+                    <include name="getEventByIdTest"/>
+                    <include name="updateEventTest"/>
+                    <include name="deleteEventByIdTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

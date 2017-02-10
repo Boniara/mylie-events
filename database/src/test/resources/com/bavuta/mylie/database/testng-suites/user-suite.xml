@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+        
+<suite name="UserDaoTestSuite">
+    <test name="user-suite">
+        <classes>
+            <class name="com.bavuta.mylie.UserTests">
+                <methods>
+                    <include name="createUserTest"/>
+                    <include name="getAllUsersTest"/>
+                    <include name="getUserByIdTest"/>
+                    <include name="updateUserTest"/>
+                    <include name="deleteUserByIdTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
